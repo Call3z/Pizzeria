@@ -33,9 +33,19 @@ namespace Pizzeria.Data
 
             if (!context.Dishes.Any())
             {
+
                 var vesuvio = new Dish() { Name = "Vesuvio", Price = 75 };
                 var hawaii = new Dish() { Name = "Hawaii", Price = 80 };
                 var margaritha = new Dish() { Name = "Margaritha", Price = 80 };
+
+                var cheese = new Ingredient { Name = "Cheese" };
+                var tomato = new Ingredient { Name = "Tomato" };
+                var ham = new Ingredient { Name = "Ham" };
+
+                var vesuvioCheese = new DishIngredient { Dish = vesuvio, Ingredient = cheese };
+                var vesuvioTomato = new DishIngredient { Dish = vesuvio, Ingredient = tomato };
+                var vesuvioHam = new DishIngredient { Dish = vesuvio, Ingredient = ham };
+
                 context.AddRange(vesuvio, hawaii, margaritha);
                 context.SaveChanges();
             }
