@@ -46,6 +46,12 @@ namespace Pizzeria.Data
                 var vesuvioTomato = new DishIngredient { Dish = vesuvio, Ingredient = tomato };
                 var vesuvioHam = new DishIngredient { Dish = vesuvio, Ingredient = ham };
 
+                vesuvio.DishIngredients = new List<DishIngredient>();
+                vesuvio.DishIngredients.Add(vesuvioCheese);
+                vesuvio.DishIngredients.Add(vesuvioTomato);
+                vesuvio.DishIngredients.Add(vesuvioHam);
+
+                context.AddRange(vesuvioCheese, vesuvioTomato, vesuvioHam);
                 context.AddRange(vesuvio, hawaii, margaritha);
                 context.SaveChanges();
             }
