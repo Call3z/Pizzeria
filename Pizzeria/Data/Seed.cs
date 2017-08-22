@@ -33,10 +33,13 @@ namespace Pizzeria.Data
 
             if (!context.Dishes.Any())
             {
+                var pizza = new Category() { Name = "Pizza" };
+                var pasta = new Category() { Name = "Pasta" };
+                var salad = new Category() { Name = "Salad" };
 
-                var vesuvio = new Dish() { Name = "Vesuvio", Price = 75 };
-                var hawaii = new Dish() { Name = "Hawaii", Price = 80 };
-                var margaritha = new Dish() { Name = "Margaritha", Price = 80 };
+                var vesuvio = new Dish() { Name = "Vesuvio", Price = 75, Category = pizza };
+                var hawaii = new Dish() { Name = "Hawaii", Price = 80, Category = pizza };
+                var margaritha = new Dish() { Name = "Margaritha", Price = 80, Category = pizza };
 
                 var cheese = new Ingredient { Name = "Cheese" };
                 var tomato = new Ingredient { Name = "Tomato" };
@@ -51,7 +54,7 @@ namespace Pizzeria.Data
                 vesuvio.DishIngredients.Add(vesuvioTomato);
                 vesuvio.DishIngredients.Add(vesuvioHam);
 
-                context.AddRange(vesuvioCheese, vesuvioTomato, vesuvioHam);
+                //context.AddRange(vesuvioCheese, vesuvioTomato, vesuvioHam);
                 context.AddRange(vesuvio, hawaii, margaritha);
                 context.SaveChanges();
             }
