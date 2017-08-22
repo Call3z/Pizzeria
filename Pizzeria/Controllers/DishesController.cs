@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pizzeria.Data;
 using Pizzeria.Models;
+using Pizzeria.ViewModels;
 
 namespace Pizzeria.Controllers
 {
@@ -77,12 +78,35 @@ namespace Pizzeria.Controllers
                 return NotFound();
             }
 
-            var dish = await _context.Dishes.SingleOrDefaultAsync(m => m.DishId == id);
+            var dish = await _context.Dishes.
+                Include(x=> x.Category).
+                Include(x=> x.DishIngredients).
+                ThenInclude(x=> x.Ingredient).
+                SingleOrDefaultAsync(m => m.DishId == id);
+
+            var allCategories = await _context.Categories.ToListAsync();
+            var allIngredients = await _context.Ingredients.Select(x=> new IngredientViewModel()
+            {
+                Id = x.IngredientId,
+                Name = x.Name,
+                Selected = dish.DishIngredients.Any(k=> k.IngredientId.Equals(x.IngredientId) ? true : false)
+            }).ToListAsync();
+
+            var viewModel = new DishViewModel()
+            {
+                DishId = dish.DishId,
+                Name = dish.Name,
+                Price = dish.Price,
+                CategoryId = dish.Category.CategoryId,
+                Ingredients = allIngredients,
+                Categories = allCategories
+            };
+
             if (dish == null)
             {
                 return NotFound();
             }
-            return View(dish);
+            return View(viewModel);
         }
 
         // POST: Dishes/Edit/5
@@ -90,15 +114,29 @@ namespace Pizzeria.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("DishId,Name,Price")] Dish dish)
+        //[Bind("DishId,Name,Price,Ingredients")] Dish dish
+        public async Task<IActionResult> Edit(DishViewModel model)
         {
-            if (id != dish.DishId)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
+                var dish = _context.Dishes.Include(x=> x.DishIngredients).FirstOrDefault(x => x.DishId.Equals(model.DishId));
+                dish.CategoryId = model.CategoryId;
+                dish.Name = model.Name;
+                dish.Price = model.Price;
+
+                foreach (var ingredient in model.Ingredients)
+                {
+                    if (ingredient.Selected && !dish.DishIngredients.Any(x=> x.IngredientId.Equals(ingredient.Id)))
+                    {
+                        dish.DishIngredients.Add(new DishIngredient() { IngredientId = ingredient.Id });
+                    }
+                    else if(!ingredient.Selected && dish.DishIngredients.Any(x=> x.IngredientId.Equals(ingredient.Id)))
+                    {
+                        dish.DishIngredients.RemoveAll(x => x.IngredientId.Equals(ingredient.Id));
+                    }
+                }
+
                 try
                 {
                     _context.Update(dish);
@@ -117,7 +155,7 @@ namespace Pizzeria.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(dish);
+            return View(model);
         }
 
         // GET: Dishes/Delete/5

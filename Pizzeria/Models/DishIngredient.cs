@@ -11,6 +11,5 @@ namespace Pizzeria.Models
         public Dish Dish { get; set; }
         public int IngredientId { get; set; }
         public Ingredient Ingredient { get; set; }
-
     }
 }
