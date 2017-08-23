@@ -60,7 +60,10 @@ namespace Pizzeria.Controllers
                 Email = user.Email,
                 PhoneNumber = user.PhoneNumber,
                 IsEmailConfirmed = user.EmailConfirmed,
-                StatusMessage = StatusMessage
+                StatusMessage = StatusMessage,
+                City = user.City,
+                Street = user.Street,
+                Zip = user.Zip
             };
 
             return View(model);

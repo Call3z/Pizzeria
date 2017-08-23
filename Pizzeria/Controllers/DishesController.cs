@@ -37,6 +37,7 @@ namespace Pizzeria.Controllers
             var dish = await _context.Dishes
                 .Include(k=> k.DishIngredients)
                 .ThenInclude(di=> di.Ingredient)
+                .Include(c=> c.Category)
                 .SingleOrDefaultAsync(m => m.DishId == id);
 
 
@@ -51,7 +52,17 @@ namespace Pizzeria.Controllers
         // GET: Dishes/Create
         public IActionResult Create()
         {
-            return View();
+            var categories = _context.Categories.ToList();
+            var ingredients = _context.Ingredients.ToList();
+
+            var ingredientViewModel = new List<IngredientViewModel>();
+            foreach(var ingredient in ingredients)
+            {
+                ingredientViewModel.Add(new IngredientViewModel() { Id = ingredient.IngredientId, Name = ingredient.Name, Selected = false });
+            }
+
+            var viewModel = new DishViewModel() { Categories = categories, Ingredients = ingredientViewModel };
+            return View(viewModel);
         }
 
         // POST: Dishes/Create
@@ -59,15 +70,32 @@ namespace Pizzeria.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DishId,Name,Price")] Dish dish)
+        public async Task<IActionResult> Create(DishViewModel model)
         {
             if (ModelState.IsValid)
             {
+
+                var dishIngredients = new List<DishIngredient>();
+                foreach (var ingredient in model.Ingredients.Where(x=> x.Selected))
+                {
+                    dishIngredients.Add(new DishIngredient() { IngredientId = ingredient.Id });
+                }
+
+                var category = _context.Categories.FirstOrDefault(x => x.CategoryId.Equals(model.CategoryId));
+
+                var dish = new Dish()
+                {
+                    Name = model.Name,
+                    Price = model.Price,
+                    Category = category,
+                    DishIngredients = dishIngredients
+                };
+
                 _context.Add(dish);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(dish);
+            return View(model);
         }
 
         // GET: Dishes/Edit/5
