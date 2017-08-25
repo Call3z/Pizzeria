@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pizzeria.Data;
 using Pizzeria.Models;
 using Pizzeria.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace Pizzeria
 {
@@ -36,8 +37,17 @@ namespace Pizzeria
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromMinutes(60);
+            });
+
             // Add application services.
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<ICartService, CartService>();
             services.AddTransient<UserManager<ApplicationUser>>();
             services.AddTransient<RoleManager<IdentityRole>>();
 
@@ -57,6 +67,8 @@ namespace Pizzeria
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseSession();
 
             app.UseStaticFiles();
 

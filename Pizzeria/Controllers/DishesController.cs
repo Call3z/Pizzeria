@@ -55,6 +55,7 @@ namespace Pizzeria.Controllers
             var categories = _context.Categories.ToList();
             var ingredients = _context.Ingredients.ToList();
 
+
             var ingredientViewModel = new List<IngredientViewModel>();
             foreach(var ingredient in ingredients)
             {
