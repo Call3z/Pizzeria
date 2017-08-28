@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Pizzeria.Services;
 using Pizzeria.Data;
+using Pizzeria.Models.OrderViewModels;
+using Pizzeria.ViewModels;
 
 namespace Pizzeria.Controllers
 {
@@ -23,13 +25,36 @@ namespace Pizzeria.Controllers
         public IActionResult Index()
         {
             var dishes = _context.Dishes.Include(di => di.DishIngredients).ThenInclude(i => i.Ingredient).Include(c => c.Category).ToList();
-            return View(dishes);
+            var viewModel = new OrderViewModel()
+            {
+                Dishes = dishes,
+                DishesInCart = _cartService.CartCreated() ? _cartService.GetAllDishes() : null
+            };
+            return View(viewModel);
         }
 
-        public IActionResult Test()
+        public IActionResult Add(int id)
         {
-            var k = _cartService.GetAllDishes();
-            return View("Index");
+            _cartService.AddDish(_context.Dishes.AsNoTracking().Include(di=> di.DishIngredients).ThenInclude(i=> i.Ingredient).Include(c=> c.Category).FirstOrDefault(x => x.DishId.Equals(id)));
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Edit(Guid id)
+        {
+            var dish = _cartService.GetDish(id);
+            var extras = _context.Ingredients.Where(x=> !dish.Ingredients.Any(y=> y.Id.Equals(x.IngredientId))).ToList();
+            var extrasViewModel = extras.Select(x => new IngredientViewModel() { Id = x.IngredientId, Name = x.Name, Selected = false }).ToList();
+            var viewModel = new OrderCustomizeModel() { Dish = dish, Ingredients = extrasViewModel };
+
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public IActionResult Edit(OrderCustomizeModel model)
+        {
+            _cartService.Customize(model);
+            return RedirectToAction("Index");
         }
     }
 }

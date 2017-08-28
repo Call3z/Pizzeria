@@ -1,4 +1,5 @@
 ﻿using Pizzeria.Models;
+using Pizzeria.Models.OrderViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace Pizzeria.Services
     {
         void AddDish(Dish dish);
         void RemoveDish(Guid id);
+        bool CartCreated();
+        void Customize(OrderCustomizeModel model);
         CartDish GetDish(Guid id);
         List<CartDish> GetAllDishes();
         Double OrderTotal();

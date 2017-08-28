@@ -1,0 +1,42 @@
+﻿@model Pizzeria.Models.OrderViewModels.OrderCustomizeModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<h1>@Model.Dish.Name</h1>
+<h2>@Model.Dish.Price SEK</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <input asp-for="@Model.Dish.Id" type="hidden" value="@Model.Dish.Id"/>
+            <div class="form-group">
+                <p>Current ingredients: @if (!Model.Dish.Ingredients.Any()) { @Html.Raw("none")}</p>
+                @for(var i = 0; i < Model.Dish.Ingredients.Count; i++)
+                {
+                    <label>@Model.Dish.Ingredients[i].Name</label>
+                    <input asp-for="@Model.Dish.Ingredients[i].Selected" type="checkbox"/>
+                    <input asp-for="@Model.Dish.Ingredients[i].Id" type="hidden" value="@Model.Dish.Ingredients[i].Id" />
+                    <input asp-for="@Model.Dish.Ingredients[i].Name" type="hidden" value="@Model.Dish.Ingredients[i].Name" />
+                }
+                <br />
+                <p>Extras: @if (!Model.Ingredients.Any()) { @Html.Raw("none")}</p>
+                @for(var i = 0; i < Model.Ingredients.Count; i++)
+                {
+                    <label>@Model.Ingredients[i].Name</label>
+                    <input asp-for="@Model.Ingredients[i].Selected" type="checkbox"/>
+                    <input asp-for="@Model.Ingredients[i].Id" type="hidden" value="@Model.Ingredients[i].Id"/>
+                    <input asp-for="@Model.Ingredients[i].Name" type="hidden" value="@Model.Ingredients[i].Name" />
+                }
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

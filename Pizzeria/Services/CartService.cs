@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Pizzeria.Models;
 using Newtonsoft.Json;
+using Pizzeria.ViewModels;
+using Pizzeria.Models.OrderViewModels;
 
 namespace Pizzeria.Services
 {
@@ -28,7 +30,7 @@ namespace Pizzeria.Services
                     Name = dish.Name,
                     Price = dish.Price,
                     CategoryName = dish.Category.Name,
-                    Ingredients = dish.DishIngredients.Select(x=> x.Ingredient.Name).ToList()
+                    Ingredients = dish.DishIngredients.Select(x => new IngredientViewModel() { Id = x.Ingredient.IngredientId, Name = x.Ingredient.Name, Selected = true }).ToList()
                 });
 
                 var serialized = JsonConvert.SerializeObject(list);
@@ -44,7 +46,7 @@ namespace Pizzeria.Services
                     Name = dish.Name,
                     Price = dish.Price,
                     CategoryName = dish.Category.Name,
-                    Ingredients = dish.DishIngredients.Select(x => x.Ingredient.Name).ToList()
+                    Ingredients = dish.DishIngredients.Select(x => new IngredientViewModel() { Id = x.Ingredient.IngredientId, Name = x.Ingredient.Name, Selected = true }).ToList()
                 });
 
                 var serialized = JsonConvert.SerializeObject(deserialized);
@@ -82,6 +84,44 @@ namespace Pizzeria.Services
                 _accessor.HttpContext.Session.SetString("Cart", serialized);
             }
 
+        }
+
+        public void Customize(OrderCustomizeModel model)
+        {
+            var dishes = GetAllDishes();
+            var dish = dishes.FirstOrDefault(x => x.Id.Equals(model.Dish.Id));
+
+            var notSelectedCurrent = model.Dish.Ingredients?.Where(x => !x.Selected);
+
+            if(notSelectedCurrent != null)
+            {
+                foreach (var ingredient in notSelectedCurrent)
+                {
+                    var ingredientToRemove = dish.Ingredients.FirstOrDefault(x => x.Id.Equals(ingredient.Id));
+                    if (ingredientToRemove != null)
+                    {
+                        dish.Ingredients.Remove(ingredientToRemove);
+                    }
+                }
+            }
+
+            var selectedExtras = model.Ingredients?.Where(x => x.Selected);
+
+            if(selectedExtras != null)
+            {
+                foreach (var extraIngredient in model.Ingredients.Where(x => x.Selected))
+                {
+                    dish.Ingredients.Add(new IngredientViewModel() { Id = extraIngredient.Id, Name = extraIngredient.Name, Selected = true });
+                }
+            }
+
+            var serialized = JsonConvert.SerializeObject(dishes);
+            _accessor.HttpContext.Session.SetString("Cart", serialized);
+        }
+
+        public bool CartCreated()
+        {
+            return _accessor.HttpContext.Session.Keys.Any();
         }
     }
 }

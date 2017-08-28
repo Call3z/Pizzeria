@@ -1,13 +1,29 @@
-﻿@model List<Dish>
+﻿@model Pizzeria.Models.OrderViewModels.OrderViewModel
 @{
     ViewData["Title"] = "Index";
+    var grouped = Model.Dishes.GroupBy(x => x.Category.Name);
 }
 
 <h2>Index</h2>
 
-@foreach(var dish in Model)
+@if(Model.DishesInCart != null)
 {
-    <p>@dish.Name</p>
-    <p>@dish.Price</p>
+    <h1>Cart:</h1>
+    foreach(var dish in Model.DishesInCart.OrderByDescending(x=> x.Added))
+    {
+        <p>@dish.Name</p>
+        <a asp-controller="Order" asp-action="Edit" asp-route-id="@dish.Id">snockel</a>
+    }
 }
 
+@foreach(var category in grouped)
+{
+    <h1>@category.Key</h1>
+    @foreach(var dish in category)
+    {
+        <h2>@dish.Name</h2>
+        <p>Price: @dish.Price</p>
+        <p>Ingredients: @string.Join(",", dish.DishIngredients.Select(x=> x.Ingredient.Name))</p>
+        <a asp-controller="Order" asp-action="Add" asp-route-id="@dish.DishId">Add to cart</a>
+    }
+}
