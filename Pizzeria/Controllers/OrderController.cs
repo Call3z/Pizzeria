@@ -22,13 +22,8 @@ namespace Pizzeria.Controllers
 
         public IActionResult Index()
         {
-            var dish = _context.Dishes.Include(x => x.DishIngredients).ThenInclude(di => di.Ingredient).Include(x => x.Category).ToList();
-
-            foreach (var item in dish)
-            {
-                _cartService.AddDish(item);
-            }
-            return View();
+            var dishes = _context.Dishes.Include(di => di.DishIngredients).ThenInclude(i => i.Ingredient).Include(c => c.Category).ToList();
+            return View(dishes);
         }
 
         public IActionResult Test()

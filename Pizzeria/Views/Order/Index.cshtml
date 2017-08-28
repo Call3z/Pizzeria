@@ -1,7 +1,13 @@
-﻿
+﻿@model List<Dish>
 @{
     ViewData["Title"] = "Index";
 }
 
 <h2>Index</h2>
+
+@foreach(var dish in Model)
+{
+    <p>@dish.Name</p>
+    <p>@dish.Price</p>
+}
 
