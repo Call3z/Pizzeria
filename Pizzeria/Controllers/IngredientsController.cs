@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Pizzeria.Data;
 using Pizzeria.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pizzeria.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class IngredientsController : Controller
     {
         private readonly ApplicationDbContext _context;

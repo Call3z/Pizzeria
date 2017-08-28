@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Pizzeria.Data;
 using Pizzeria.Models;
 using Pizzeria.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Pizzeria.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class DishesController : Controller
     {
         private readonly ApplicationDbContext _context;
