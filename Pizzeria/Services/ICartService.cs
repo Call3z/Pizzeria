@@ -15,6 +15,6 @@ namespace Pizzeria.Services
         void Customize(OrderCustomizeModel model);
         CartDish GetDish(Guid id);
         List<CartDish> GetAllDishes();
-        Double OrderTotal();
+        int OrderTotal();
     }
 }

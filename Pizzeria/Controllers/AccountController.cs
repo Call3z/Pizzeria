@@ -220,7 +220,7 @@ namespace Pizzeria.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, City = model.City, Street = model.Street, Zip = model.Zip };
+                var user = new ApplicationUser { Name = model.Name, UserName = model.Email, Email = model.Email, City = model.City, Street = model.Street, Zip = model.Zip };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

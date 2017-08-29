@@ -67,7 +67,7 @@ namespace Pizzeria.Services
             return deserialized;
         }
 
-        public double OrderTotal()
+        public int OrderTotal()
         {
             var list = _accessor.HttpContext.Session.GetString("Cart");
             return JsonConvert.DeserializeObject<List<CartDish>>(list).Sum(x => x.Price);

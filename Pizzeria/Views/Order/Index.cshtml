@@ -12,7 +12,7 @@
     foreach(var dish in Model.DishesInCart.OrderByDescending(x=> x.Added))
     {
         <p>@dish.Name</p>
-        <a asp-controller="Order" asp-action="Edit" asp-route-id="@dish.Id">snockel</a>
+        <a asp-controller="Order" asp-action="Edit" asp-route-id="@dish.Id">Edit</a>
     }
 }
 
