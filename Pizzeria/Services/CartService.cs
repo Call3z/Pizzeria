@@ -27,10 +27,11 @@ namespace Pizzeria.Services
 
                 list.Add(new CartDish() {
                     Id = Guid.NewGuid(),
+                    DishId = dish.DishId,
                     Name = dish.Name,
                     Price = dish.Price,
                     CategoryName = dish.Category.Name,
-                    Ingredients = dish.DishIngredients.Select(x => new IngredientViewModel() { Id = x.Ingredient.IngredientId, Name = x.Ingredient.Name, Selected = true }).ToList()
+                    Ingredients = dish.DishIngredients.Select(x => new IngredientViewModel() { Id = x.Ingredient.IngredientId, Name = x.Ingredient.Name, Price = x.Ingredient.Price, Selected = true }).ToList()
                 });
 
                 var serialized = JsonConvert.SerializeObject(list);
@@ -43,10 +44,11 @@ namespace Pizzeria.Services
 
                 deserialized.Add(new CartDish() {
                     Id = Guid.NewGuid(),
+                    DishId = dish.DishId,
                     Name = dish.Name,
                     Price = dish.Price,
                     CategoryName = dish.Category.Name,
-                    Ingredients = dish.DishIngredients.Select(x => new IngredientViewModel() { Id = x.Ingredient.IngredientId, Name = x.Ingredient.Name, Selected = true }).ToList()
+                    Ingredients = dish.DishIngredients.Select(x => new IngredientViewModel() { Id = x.Ingredient.IngredientId, Name = x.Ingredient.Name, Price = x.Ingredient.Price, Selected = true }).ToList()
                 });
 
                 var serialized = JsonConvert.SerializeObject(deserialized);
@@ -70,6 +72,17 @@ namespace Pizzeria.Services
         public int OrderTotal()
         {
             var list = _accessor.HttpContext.Session.GetString("Cart");
+            var deserialized = JsonConvert.DeserializeObject<List<CartDish>>(list);
+
+            int totalPrice = 0;
+
+            foreach (var dish in deserialized)
+            {
+                totalPrice += dish.Price;
+                
+                totalPrice += 
+            }
+
             return JsonConvert.DeserializeObject<List<CartDish>>(list).Sum(x => x.Price);
         }
 

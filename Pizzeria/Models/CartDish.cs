@@ -9,6 +9,7 @@ namespace Pizzeria.Models
     public class CartDish
     {
         public Guid Id { get; set; }
+        public int DishId { get; set; }
         public string Name { get; set; }
         public int Price { get; set; }
 

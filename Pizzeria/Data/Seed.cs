@@ -41,9 +41,9 @@ namespace Pizzeria.Data
                 var hawaii = new Dish() { Name = "Hawaii", Price = 80, Category = pizza };
                 var margaritha = new Dish() { Name = "Margaritha", Price = 80, Category = pizza };
 
-                var cheese = new Ingredient { Name = "Cheese" };
-                var tomato = new Ingredient { Name = "Tomato" };
-                var ham = new Ingredient { Name = "Ham" };
+                var cheese = new Ingredient { Name = "Cheese", Price = 2 };
+                var tomato = new Ingredient { Name = "Tomato", Price = 2 };
+                var ham = new Ingredient { Name = "Ham", Price = 2 };
 
                 var vesuvioCheese = new DishIngredient { Dish = vesuvio, Ingredient = cheese };
                 var vesuvioTomato = new DishIngredient { Dish = vesuvio, Ingredient = tomato };
