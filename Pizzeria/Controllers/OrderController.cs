@@ -8,6 +8,7 @@ using Pizzeria.Services;
 using Pizzeria.Data;
 using Pizzeria.Models.OrderViewModels;
 using Pizzeria.ViewModels;
+using Pizzeria.Models;
 
 namespace Pizzeria.Controllers
 {
@@ -42,16 +43,17 @@ namespace Pizzeria.Controllers
         public IActionResult Edit(Guid id)
         {
             var dish = _cartService.GetDish(id);
-            var extras = _context.Ingredients.Where(x=> !dish.Ingredients.Any(y=> y.Id.Equals(x.IngredientId))).ToList();
-            var extrasViewModel = extras.Select(x => new IngredientViewModel() { Id = x.IngredientId, Name = x.Name, Selected = false }).ToList();
-            var viewModel = new OrderCustomizeModel() { Dish = dish, Ingredients = extrasViewModel };
+            var extras = _context.Ingredients.Where(x=> !dish.IncludedIngredients.Any(y=> y.Id.Equals(x.IngredientId)) && !dish.ExtraIngredients.Any(y=> y.Id.Equals(x.IngredientId))).ToList();
+            var extrasViewModel = extras.Select(x => new IngredientViewModel() { Id = x.IngredientId, Name = x.Name, Selected = false, Price = x.Price }).ToList();
+
+            dish.ExtraIngredients.AddRange(extrasViewModel);
 
 
-            return View(viewModel);
+            return View(dish);
         }
 
         [HttpPost]
-        public IActionResult Edit(OrderCustomizeModel model)
+        public IActionResult Edit(CartDish model)
         {
             _cartService.Customize(model);
             return RedirectToAction("Index");

@@ -12,7 +12,7 @@ namespace Pizzeria.Services
         void AddDish(Dish dish);
         void RemoveDish(Guid id);
         bool CartCreated();
-        void Customize(OrderCustomizeModel model);
+        void Customize(CartDish model);
         CartDish GetDish(Guid id);
         List<CartDish> GetAllDishes();
         int OrderTotal();

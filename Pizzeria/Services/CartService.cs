@@ -27,11 +27,12 @@ namespace Pizzeria.Services
 
                 list.Add(new CartDish() {
                     Id = Guid.NewGuid(),
-                    DishId = dish.DishId,
                     Name = dish.Name,
                     Price = dish.Price,
                     CategoryName = dish.Category.Name,
-                    Ingredients = dish.DishIngredients.Select(x => new IngredientViewModel() { Id = x.Ingredient.IngredientId, Name = x.Ingredient.Name, Price = x.Ingredient.Price, Selected = true }).ToList()
+                    IncludedIngredients = dish.DishIngredients.Select(x => new IngredientViewModel() { Id = x.Ingredient.IngredientId, Name = x.Ingredient.Name, Price = x.Ingredient.Price, Selected = true }).ToList(),
+                    ExtraIngredients = new List<IngredientViewModel>(),
+                    Added = DateTime.Now
                 });
 
                 var serialized = JsonConvert.SerializeObject(list);
@@ -44,11 +45,12 @@ namespace Pizzeria.Services
 
                 deserialized.Add(new CartDish() {
                     Id = Guid.NewGuid(),
-                    DishId = dish.DishId,
                     Name = dish.Name,
                     Price = dish.Price,
                     CategoryName = dish.Category.Name,
-                    Ingredients = dish.DishIngredients.Select(x => new IngredientViewModel() { Id = x.Ingredient.IngredientId, Name = x.Ingredient.Name, Price = x.Ingredient.Price, Selected = true }).ToList()
+                    IncludedIngredients = dish.DishIngredients.Select(x => new IngredientViewModel() { Id = x.Ingredient.IngredientId, Name = x.Ingredient.Name, Price = x.Ingredient.Price, Selected = true }).ToList(),
+                    ExtraIngredients = new List<IngredientViewModel>(),
+                    Added = DateTime.Now
                 });
 
                 var serialized = JsonConvert.SerializeObject(deserialized);
@@ -78,12 +80,11 @@ namespace Pizzeria.Services
 
             foreach (var dish in deserialized)
             {
-                totalPrice += dish.Price;
-                
-                totalPrice += 
+                totalPrice += dish.Price + dish.ExtraIngredients.Sum(x=> x.Price);
+               
             }
 
-            return JsonConvert.DeserializeObject<List<CartDish>>(list).Sum(x => x.Price);
+            return totalPrice;
         }
 
         public void RemoveDish(Guid id)
@@ -99,32 +100,49 @@ namespace Pizzeria.Services
 
         }
 
-        public void Customize(OrderCustomizeModel model)
+        public void Customize(CartDish model)
         {
             var dishes = GetAllDishes();
-            var dish = dishes.FirstOrDefault(x => x.Id.Equals(model.Dish.Id));
+            var dish = dishes.FirstOrDefault(x => x.Id.Equals(model.Id));
 
-            var notSelectedCurrent = model.Dish.Ingredients?.Where(x => !x.Selected);
-
-            if(notSelectedCurrent != null)
+            if(model.IncludedIngredients != null)
             {
-                foreach (var ingredient in notSelectedCurrent)
+                foreach (var ingredient in model.IncludedIngredients)
                 {
-                    var ingredientToRemove = dish.Ingredients.FirstOrDefault(x => x.Id.Equals(ingredient.Id));
-                    if (ingredientToRemove != null)
+                    if (ingredient.Selected)
                     {
-                        dish.Ingredients.Remove(ingredientToRemove);
+                        dish.IncludedIngredients.FirstOrDefault(x => x.Id.Equals(ingredient.Id)).Selected = true;
+                    }
+                    else
+                    {
+                        dish.IncludedIngredients.FirstOrDefault(x => x.Id.Equals(ingredient.Id)).Selected = false;
                     }
                 }
             }
 
-            var selectedExtras = model.Ingredients?.Where(x => x.Selected);
-
-            if(selectedExtras != null)
+            if(model.ExtraIngredients != null)
             {
-                foreach (var extraIngredient in model.Ingredients.Where(x => x.Selected))
+                foreach (var ingredient in model.ExtraIngredients)
                 {
-                    dish.Ingredients.Add(new IngredientViewModel() { Id = extraIngredient.Id, Name = extraIngredient.Name, Selected = true });
+                    if (ingredient.Selected)
+                    {
+                        if (!dish.ExtraIngredients.Any(x => x.Id.Equals(ingredient.Id)))
+                        {
+                            dish.ExtraIngredients.Add(ingredient);
+                        }
+                        else
+                        {
+                            dish.ExtraIngredients.FirstOrDefault(x => x.Id.Equals(ingredient.Id)).Selected = true;
+                        }
+                    }
+                    else
+                    {
+                        if (dish.ExtraIngredients.Any(x => x.Id.Equals(ingredient.Id)))
+                        {
+                            var ingredientToRemove = dish.ExtraIngredients.FirstOrDefault(x => x.Id.Equals(ingredient.Id));
+                            dish.ExtraIngredients.Remove(ingredientToRemove);
+                        }
+                    }
                 }
             }
 

@@ -9,11 +9,11 @@ namespace Pizzeria.Models
     public class CartDish
     {
         public Guid Id { get; set; }
-        public int DishId { get; set; }
         public string Name { get; set; }
         public int Price { get; set; }
 
-        public List<IngredientViewModel> Ingredients { get; set; }
+        public List<IngredientViewModel> IncludedIngredients { get; set; }
+        public List<IngredientViewModel> ExtraIngredients { get; set; }
         public string CategoryName { get; set; }
 
         public DateTime Added { get; set; }
