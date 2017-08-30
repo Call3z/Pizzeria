@@ -104,6 +104,40 @@ namespace Pizzeria.Controllers
                 }
             }
 
+            var street = user.Street;
+            if(model.Street != street)
+            {
+                user.Street = model.Street;
+                var setStreet = await _userManager.UpdateAsync(user);
+                if(!setStreet.Succeeded)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting street for user with ID '{user.Id}'.");
+                }
+            }
+
+            var city = user.City;
+            if (model.City != city)
+            {
+                user.City = model.City;
+                var setCity = await _userManager.UpdateAsync(user);
+                if (!setCity.Succeeded)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting city for user with ID '{user.Id}'.");
+                }
+            }
+
+            var zip = user.Zip;
+            if (model.Zip != zip)
+            {
+                user.Zip = model.Zip;
+                var setZip = await _userManager.UpdateAsync(user);
+                if (!setZip.Succeeded)
+                {
+                    throw new ApplicationException($"Unexpected error occurred setting zip for user with ID '{user.Id}'.");
+                }
+            }
+
+
             StatusMessage = "Your profile has been updated";
             return RedirectToAction(nameof(Index));
         }
