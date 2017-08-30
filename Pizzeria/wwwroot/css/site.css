@@ -33,3 +33,13 @@
         display: none;
     }
 }
+
+.menu {
+    float: left;
+    background-color: ghostwhite;
+}
+
+.cart{
+    float: right;
+    background-color: ghostwhite;
+}

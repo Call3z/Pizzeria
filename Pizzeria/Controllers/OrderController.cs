@@ -58,5 +58,11 @@ namespace Pizzeria.Controllers
             _cartService.Customize(model);
             return RedirectToAction("Index");
         }
+
+        public IActionResult Remove(Guid id)
+        {
+            _cartService.RemoveDish(id);
+            return RedirectToAction("Index");
+        }
     }
 }

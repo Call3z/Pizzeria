@@ -1,12 +1,15 @@
 ﻿@model List<CartDish>
 
-@if (Model != null)
+@if (Model != null && Model.Count > 0)
 {
     <h1>Cart:</h1>
+    <hr />
     foreach (var dish in Model.OrderByDescending(x => x.Added))
     {
         <p>@dish.Name</p>
         <a asp-controller="Order" asp-action="Edit" asp-route-id="@dish.Id">Edit</a>
+        <a asp-controller="Order" asp-action="Remove" asp-route-id="@dish.Id">Remove</a>
+        <hr />
     }
     <h2>Total price: @(Model.Sum(x => x.Price) + Model.SelectMany(x => x.ExtraIngredients).Where(x => x.Selected).Sum(x => x.Price))</h2>
     <a asp-controller="Payment" asp-action="Pay">Check out</a>

@@ -4,18 +4,21 @@
     var grouped = Model.Dishes.GroupBy(x => x.Category.Name);
 }
 
-<h2>Index</h2>
+<div class="container-fluid">
+    <h2>Index</h2>
+    <div class="menu">
+        @foreach (var category in grouped)
+        {
+            <h1>@category.Key</h1>
+            @foreach (var dish in category)
+            {
+                <h2>@dish.Name</h2>
+                <p>Price: @dish.Price</p>
+                <p>Ingredients: @string.Join(",", dish.DishIngredients.OrderBy(x => x.Ingredient.Name).Select(x => x.Ingredient.Name))</p>
+                <a asp-controller="Order" asp-action="Add" asp-route-id="@dish.DishId">Add to cart</a>
+            }
+        }
+    </div>
 
-@{Html.RenderPartial("_CartPartial", Model.DishesInCart);}
-
-@foreach(var category in grouped)
-{
-    <h1>@category.Key</h1>
-    @foreach(var dish in category)
-    {
-        <h2>@dish.Name</h2>
-        <p>Price: @dish.Price</p>
-        <p>Ingredients: @string.Join(",", dish.DishIngredients.OrderBy(x=> x.Ingredient.Name).Select(x=> x.Ingredient.Name))</p>
-        <a asp-controller="Order" asp-action="Add" asp-route-id="@dish.DishId">Add to cart</a>
-    }
-}
+    <div class="cart">@{Html.RenderPartial("_CartPartial", Model.DishesInCart);}</div>
+</div>
