@@ -70,10 +70,6 @@ namespace Pizzeria.Controllers
         // GET: Ingredients/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
             var ingredient = await _context.Ingredients.SingleOrDefaultAsync(m => m.IngredientId == id);
             if (ingredient == null)
@@ -88,12 +84,8 @@ namespace Pizzeria.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IngredientId,Name,Price")] Ingredient ingredient)
+        public async Task<IActionResult> Edit([Bind("IngredientId,Name,Price")] Ingredient ingredient)
         {
-            if (id != ingredient.IngredientId)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -121,10 +113,6 @@ namespace Pizzeria.Controllers
         // GET: Ingredients/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
             var ingredient = await _context.Ingredients
                 .SingleOrDefaultAsync(m => m.IngredientId == id);
@@ -139,9 +127,9 @@ namespace Pizzeria.Controllers
         // POST: Ingredients/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int ingredientid)
         {
-            var ingredient = await _context.Ingredients.SingleOrDefaultAsync(m => m.IngredientId == id);
+            var ingredient = await _context.Ingredients.SingleOrDefaultAsync(m => m.IngredientId == ingredientid);
             _context.Ingredients.Remove(ingredient);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
