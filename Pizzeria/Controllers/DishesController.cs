@@ -152,7 +152,8 @@ namespace Pizzeria.Controllers
             if (ModelState.IsValid)
             {
                 var dish = _context.Dishes.Include(x=> x.DishIngredients).FirstOrDefault(x => x.DishId.Equals(model.DishId));
-                dish.CategoryId = model.CategoryId;
+                var category = _context.Categories.FirstOrDefault(x => x.CategoryId.Equals(model.CategoryId));
+                dish.Category = category;
                 dish.Name = model.Name;
                 dish.Price = model.Price;
 

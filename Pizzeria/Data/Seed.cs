@@ -26,6 +26,10 @@ namespace Pizzeria.Data
             var user = new ApplicationUser();
             user.Email = "user@test.com";
             user.UserName = "user@test.com";
+            user.City = "Stockholm";
+            user.Street = "Högalidsgatan 100";
+            user.Zip = "13746";
+            user.Name = "Thorsten";
             var p = userManager.CreateAsync(user, "Test123#").Result;
 
             userManager.AddToRoleAsync(adminUser, "Admin");

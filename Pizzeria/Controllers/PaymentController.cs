@@ -64,6 +64,7 @@ namespace Pizzeria.Controllers
         public IActionResult Receipt()
         {
             ViewData["Total"] = _cartService.OrderTotal();
+            _cartService.RemoveCart();
             return View();
         }
     }

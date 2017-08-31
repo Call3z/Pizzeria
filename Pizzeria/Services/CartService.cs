@@ -154,5 +154,10 @@ namespace Pizzeria.Services
         {
             return _accessor.HttpContext.Session.Keys.Any();
         }
+
+        public void RemoveCart()
+        {
+            _accessor.HttpContext.Session.Clear();
+        }
     }
 }

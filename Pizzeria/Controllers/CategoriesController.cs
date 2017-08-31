@@ -88,12 +88,8 @@ namespace Pizzeria.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CategoryId,Name")] Category category)
+        public async Task<IActionResult> Edit([Bind("CategoryId,Name")] Category category)
         {
-            if (id != category.CategoryId)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -139,9 +135,9 @@ namespace Pizzeria.Controllers
         // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int CategoryId)
         {
-            var category = await _context.Categories.SingleOrDefaultAsync(m => m.CategoryId == id);
+            var category = await _context.Categories.SingleOrDefaultAsync(m => m.CategoryId == CategoryId);
 
             var dishes = await _context.Dishes.Where(x => x.Category.Equals(category)).ToListAsync();
 
