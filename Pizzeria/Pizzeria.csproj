@@ -3,7 +3,12 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <UserSecretsId>aspnet-Pizzeria-481166CB-D849-45EF-86F8-5B0FDDB8F92C</UserSecretsId>
+    <Configurations>Debug;Release;IIS</Configurations>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\FolderProfile1.pubxml" />
+  </ItemGroup>
 
 
   <ItemGroup>

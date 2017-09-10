@@ -8,11 +8,14 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		IIS|Any CPU = IIS|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2DC445F3-AEE0-42A8-BCB6-871F40608D7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2DC445F3-AEE0-42A8-BCB6-871F40608D7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DC445F3-AEE0-42A8-BCB6-871F40608D7D}.IIS|Any CPU.ActiveCfg = IIS|Any CPU
+		{2DC445F3-AEE0-42A8-BCB6-871F40608D7D}.IIS|Any CPU.Build.0 = IIS|Any CPU
 		{2DC445F3-AEE0-42A8-BCB6-871F40608D7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DC445F3-AEE0-42A8-BCB6-871F40608D7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
