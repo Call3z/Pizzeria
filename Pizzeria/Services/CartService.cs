@@ -58,7 +58,7 @@ namespace Pizzeria.Services
             }
         }
 
-        public List<CartDish> GetAllDishes()
+        public virtual List<CartDish> GetAllDishes()
         {
             var list = _accessor.HttpContext.Session.GetString("Cart");
             return JsonConvert.DeserializeObject<List<CartDish>>(list);
@@ -73,14 +73,15 @@ namespace Pizzeria.Services
 
         public int OrderTotal()
         {
-            var list = _accessor.HttpContext.Session.GetString("Cart");
-            var deserialized = JsonConvert.DeserializeObject<List<CartDish>>(list);
+            var deserialized = GetAllDishes();
 
             int totalPrice = 0;
 
             foreach (var dish in deserialized)
             {
-                totalPrice += dish.Price + dish.ExtraIngredients.Sum(x=> x.Price);
+                var extraSum = dish.ExtraIngredients != null ? dish.ExtraIngredients.Sum(x => x.Price) : 0;
+
+                totalPrice += dish.Price + extraSum;
                
             }
 
