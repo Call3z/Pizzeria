@@ -37,9 +37,17 @@
 .menu {
     float: left;
     background-color: ghostwhite;
+    border-radius: 25px;
+    padding-left: 2px;
 }
 
-.cart{
+.cart {
     float: right;
     background-color: ghostwhite;
+    border-radius: 25px;
+    padding-left: 2px;
+}
+
+.centertext {
+    text-align: center;
 }

@@ -29,8 +29,10 @@ namespace Pizzeria.Controllers
             var viewModel = new OrderViewModel()
             {
                 Dishes = dishes,
-                DishesInCart = _cartService.CartCreated() ? _cartService.GetAllDishes() : null
+                DishesInCart = _cartService.CartCreated() ? _cartService.GetAllDishes() : null,
             };
+
+            ViewData["OrderTotal"] = _cartService.OrderTotal();
             return View(viewModel);
         }
 

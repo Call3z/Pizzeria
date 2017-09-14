@@ -9,16 +9,16 @@
     <div class="menu">
         @foreach (var category in grouped)
         {
-            <h1>@category.Key</h1>
+            <h1 class="centertext">@category.Key</h1>
+            <hr/>
             @foreach (var dish in category)
             {
                 <h2>@dish.Name</h2>
                 <p>Price: @dish.Price</p>
                 <p>Ingredients: @string.Join(",", dish.DishIngredients.OrderBy(x => x.Ingredient.Name).Select(x => x.Ingredient.Name))</p>
-                <a asp-controller="Order" asp-action="Add" asp-route-id="@dish.DishId">Add to cart</a>
+                <a class="btn btn-info" role="button" asp-controller="Order" asp-action="Add" asp-route-id="@dish.DishId">Add to cart</a>
             }
         }
     </div>
-
     <div class="cart">@{Html.RenderPartial("_CartPartial", Model.DishesInCart);}</div>
 </div>

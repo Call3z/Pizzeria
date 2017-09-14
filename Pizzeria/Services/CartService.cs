@@ -60,8 +60,13 @@ namespace Pizzeria.Services
 
         public virtual List<CartDish> GetAllDishes()
         {
-            var list = _accessor.HttpContext.Session.GetString("Cart");
-            return JsonConvert.DeserializeObject<List<CartDish>>(list);
+            if (CartCreated())
+            {
+                var list = _accessor.HttpContext.Session.GetString("Cart");
+                return JsonConvert.DeserializeObject<List<CartDish>>(list);
+            }
+
+            return null;
         }
 
         public CartDish GetDish(Guid id)
@@ -77,9 +82,14 @@ namespace Pizzeria.Services
 
             int totalPrice = 0;
 
+            if (deserialized == null)
+            {
+                return totalPrice;
+            }
+
             foreach (var dish in deserialized)
             {
-                var extraSum = dish.ExtraIngredients != null ? dish.ExtraIngredients.Sum(x => x.Price) : 0;
+                var extraSum = dish.ExtraIngredients?.Sum(x => x.Price) ?? 0;
 
                 totalPrice += dish.Price + extraSum;
                
